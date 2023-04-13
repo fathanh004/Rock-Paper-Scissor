@@ -16,6 +16,7 @@ public class Player : MonoBehaviour
     Vector3 direction = Vector3.zero;
 
     public Character SelectedCharacter { get => selectedCharacter; }
+    public List<Character> CharacterList { get => characterList; }
 
     public void Prepare()
     {
@@ -29,7 +30,7 @@ public class Player : MonoBehaviour
 
     public void SetPlay(bool value)
     {
-        foreach (var chara in characterList)
+        foreach (var chara in CharacterList)
         {
             chara.Button.interactable = value;
         }
@@ -51,30 +52,38 @@ public class Player : MonoBehaviour
     //     }
 
     // }
-    
+
     public void Attack()
     {
         // manual (without DOTween)
         // direction = atkRef.position - selectedCharacter.transform.position;
         // direction.Normalize();
 
-        selectedCharacter.transform.DOMove(atkRef.position, 1f);
+        selectedCharacter.transform.DOMove(atkRef.position, 0.7f);
     }
 
     public bool IsAttacking()
     {
-        return DOTween.IsTweening(selectedCharacter.transform); 
+        if (selectedCharacter == null)
+        {
+            return false;
+        }
+        return DOTween.IsTweening(selectedCharacter.transform);
     }
 
     public void TakeDamage(int damageValue)
     {
         selectedCharacter.ChangeHP(-damageValue);
         var spriteRend = selectedCharacter.GetComponent<SpriteRenderer>();
-        spriteRend.DOColor(Color.red, 0.1f).SetLoops(6, LoopType.Yoyo); 
+        spriteRend.DOColor(Color.red, 0.1f).SetLoops(6, LoopType.Yoyo);
     }
 
     public bool IsDamaging()
     {
+        if (selectedCharacter == null)
+        {
+            return false;
+        }
         var spriteRend = selectedCharacter.GetComponent<SpriteRenderer>();
         return DOTween.IsTweening(spriteRend);
     }
@@ -85,12 +94,28 @@ public class Player : MonoBehaviour
         {
             return;
         }
-        selectedCharacter.Button.interactable = false;
-        selectedCharacter.gameObject.SetActive(false);
-        characterList.Remove(chara);
+        if (selectedCharacter == chara)
+        {
+            selectedCharacter = null;
+        }
+        chara.Button.interactable = false;
+        chara.gameObject.SetActive(false);
+        CharacterList.Remove(chara);
     }
 
-    
+    public void Return()
+    {
+        selectedCharacter.transform.DOMove(selectedCharacter.OriginalPosition, 0.7f);
+    }
+
+    public bool IsReturning()
+    {
+        if (selectedCharacter == null)
+        {
+            return false;
+        }
+        return DOTween.IsTweening(selectedCharacter.transform);
+    }
 }
 
 

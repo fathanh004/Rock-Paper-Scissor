@@ -19,6 +19,8 @@ public class Character : MonoBehaviour
     [SerializeField] TMP_Text hpText;
     [SerializeField] Button button;
 
+    private Vector3 originalPosition;
+
     public Button Button { get => button; }
 
     public CharacterType Type { get => type; }
@@ -26,9 +28,11 @@ public class Character : MonoBehaviour
     public int attackPower { get => attack; }
     
     public int CurrentHP { get => currentHP; }
+    public Vector3 OriginalPosition { get => originalPosition; }
 
     private void Start()
     {
+        originalPosition = this.transform.position;
         overHead.text = name;
         nameText.text = name;
         typeText.text = type.ToString();
