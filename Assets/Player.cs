@@ -4,19 +4,31 @@ using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
 using DG.Tweening;
-using System;
+using UnityEngine.Events;
 
 public class Player : MonoBehaviour
 {
     [SerializeField] Character selectedCharacter;
     [SerializeField] List<Character> characterList;
     [SerializeField] Transform atkRef;
-    // [SerializeField] float speed = 1f;
+    [SerializeField] bool isBot;
+    [SerializeField] UnityEvent onTakeDamage;
 
     Vector3 direction = Vector3.zero;
 
     public Character SelectedCharacter { get => selectedCharacter; }
     public List<Character> CharacterList { get => characterList; }
+
+    private void Start()
+    {
+        if (isBot)
+        {
+            foreach (var chara in CharacterList)
+            {
+                chara.Button.interactable = false;
+            }
+        }
+    }
 
     public void Prepare()
     {
@@ -30,9 +42,26 @@ public class Player : MonoBehaviour
 
     public void SetPlay(bool value)
     {
-        foreach (var chara in CharacterList)
+        if (isBot)
         {
-            chara.Button.interactable = value;
+            List<Character> lotteryList = new List<Character>();
+            foreach (var chara in CharacterList)
+            {
+                int ticket = Mathf.CeilToInt(((float)chara.CurrentHP / (float)chara.MaxHP) * 10);
+                for (int i = 0; i < ticket; i++)
+                {
+                    lotteryList.Add(chara);
+                }
+            }
+            int index = Random.Range(0, lotteryList.Count);
+            selectedCharacter = lotteryList[index];
+        }
+        else
+        {
+            foreach (var chara in CharacterList)
+            {
+                chara.Button.interactable = value;
+            }
         }
     }
 
@@ -76,6 +105,7 @@ public class Player : MonoBehaviour
         selectedCharacter.ChangeHP(-damageValue);
         var spriteRend = selectedCharacter.GetComponent<SpriteRenderer>();
         spriteRend.DOColor(Color.red, 0.1f).SetLoops(6, LoopType.Yoyo);
+        onTakeDamage.Invoke();
     }
 
     public bool IsDamaging()
