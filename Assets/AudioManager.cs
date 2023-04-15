@@ -8,24 +8,46 @@ public class AudioManager : MonoBehaviour
     static AudioSource sfxInstance;
     [SerializeField] AudioSource bgm;
     [SerializeField] AudioSource sfx;
+    [SerializeField] GameObject bgmSlider;
+    [SerializeField] GameObject sfxSlider;
 
-    private void Awake()
+    private void Start()
     {
         if (bgmInstance != null)
         {
             Destroy(bgm.gameObject);
             bgm = bgmInstance;
         }
-        
+        else
+        {
+            bgmInstance = bgm;
+            bgm.transform.SetParent(null);
+            DontDestroyOnLoad(bgm.gameObject);
+        }
+
 
         if (sfxInstance != null)
         {
             Destroy(sfx.gameObject);
             sfx = sfxInstance;
         }
+        else
+        {
+            sfxInstance = sfx;
+            sfx.transform.SetParent(null);
+            DontDestroyOnLoad(sfx.gameObject);
+        }
 
-        DontDestroyOnLoad(bgm.gameObject);
-        DontDestroyOnLoad(sfx.gameObject);
+    }
+
+    public void SliderBGM()
+    {
+        bgm.volume = bgmSlider.GetComponent<UnityEngine.UI.Slider>().value;
+    }
+
+    public void SliderSFX()
+    {
+        sfx.volume = sfxSlider.GetComponent<UnityEngine.UI.Slider>().value;
     }
 
     public void PlayBGM(AudioClip clip, bool loop = true)
