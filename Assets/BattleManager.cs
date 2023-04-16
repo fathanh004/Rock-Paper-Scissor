@@ -12,6 +12,8 @@ public class BattleManager : MonoBehaviour
     [SerializeField] GameObject battleResult;
     [SerializeField] TMP_Text battleResultText;
 
+    static bool isMultiplayer;
+
     enum State
     {
         Preparation,
@@ -21,6 +23,23 @@ public class BattleManager : MonoBehaviour
         Damaging,
         Returning,
         BattleOver
+    }
+
+    public static void SetMultiplayer(bool value)
+    {
+        isMultiplayer = value;
+    }
+
+    void Start()
+    {
+        if (isMultiplayer == false)
+        {
+            player2.IsBot = true;
+        }
+        else
+        {
+            player2.IsBot = false;
+        }
     }
 
     void Update()
@@ -141,7 +160,7 @@ public class BattleManager : MonoBehaviour
             loser = player1;
 
         }
-        else if (type1 == CharacterType.Rock && type2 == CharacterType.Scissors)
+        else if (type1 == CharacterType.Rock && type2 == CharacterType.Scissor)
         {
             winner = player1;
             loser = player2;
@@ -151,17 +170,17 @@ public class BattleManager : MonoBehaviour
             winner = player1;
             loser = player2;
         }
-        else if (type1 == CharacterType.Paper && type2 == CharacterType.Scissors)
+        else if (type1 == CharacterType.Paper && type2 == CharacterType.Scissor)
         {
             winner = player2;
             loser = player1;
         }
-        else if (type1 == CharacterType.Scissors && type2 == CharacterType.Rock)
+        else if (type1 == CharacterType.Scissor && type2 == CharacterType.Rock)
         {
             winner = player2;
             loser = player1;
         }
-        else if (type1 == CharacterType.Scissors && type2 == CharacterType.Paper)
+        else if (type1 == CharacterType.Scissor && type2 == CharacterType.Paper)
         {
             winner = player1;
             loser = player2;

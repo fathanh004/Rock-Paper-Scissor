@@ -6,11 +6,17 @@ using UnityEngine.SceneManagement;
 public class MainMenu : MonoBehaviour
 {
     [SerializeField] GameObject optionsPanel;
-    [SerializeField] GameObject toggleMute;
 
-    public void PlayGame()
+    public void Singleplayer()
     {
         SceneManager.LoadScene("Battle");
+        BattleManager.SetMultiplayer(false);
+    }
+
+    public void Multiplayer()
+    {
+        SceneManager.LoadScene("Battle");
+        BattleManager.SetMultiplayer(true);
     }
 
     public void Options(){
@@ -19,14 +25,6 @@ public class MainMenu : MonoBehaviour
 
     public void ConfirmOptions(){
         optionsPanel.SetActive(false);
-    }
-
-    public void Mute(){
-        if (toggleMute.GetComponent<UnityEngine.UI.Toggle>().isOn){
-            AudioListener.volume = 0;
-        } else {
-            AudioListener.volume = 1;
-        }
     }
 
     public void ExitGame()

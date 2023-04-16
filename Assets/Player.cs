@@ -18,10 +18,11 @@ public class Player : MonoBehaviour
 
     public Character SelectedCharacter { get => selectedCharacter; }
     public List<Character> CharacterList { get => characterList; }
+    public bool IsBot { get => isBot; set => isBot = value; }
 
     private void Start()
     {
-        if (isBot)
+        if (IsBot)
         {
             foreach (var chara in CharacterList)
             {
@@ -42,7 +43,7 @@ public class Player : MonoBehaviour
 
     public void SetPlay(bool value)
     {
-        if (isBot)
+        if (IsBot)
         {
             List<Character> lotteryList = new List<Character>();
             foreach (var chara in CharacterList)
